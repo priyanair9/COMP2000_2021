@@ -26,12 +26,9 @@ public class Main extends JFrame{
                     g.drawRect(i, j, 35, 35);
                 }
             }
-<<<<<<< Updated upstream
-=======
             // g.setColor(Color.RED);
             // g.drawOval((int)getMousePosition().getX(), (int)getMousePosition().getY(), 5, 5);
             
->>>>>>> Stashed changes
         }
     }
 
@@ -76,17 +73,11 @@ public class Main extends JFrame{
         this.pack();
         this.setVisible(true);
     }
-<<<<<<< Updated upstream
-    // public void run() {
-
-    // }
-=======
     public void run() {
         while(true) {
             this.repaint();
         }
     }
->>>>>>> Stashed changes
 
     
     
