@@ -1,18 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
-
 class Main extends JFrame {
     
     class App extends JPanel {
-
-        Stage stage;
         
-        // Grid grid;
+        Stage stage;
 
         public App() {
             setPreferredSize(new Dimension(720, 720));
             stage = new Stage();
-            // grid = new Grid();
         }
 
         @Override
