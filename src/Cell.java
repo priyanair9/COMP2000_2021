@@ -1,18 +1,11 @@
 import java.awt.*;
-
-class Cell extends Rectangle { 
+class Cell extends Rectangle {
     // fields
-    //DELETE FIELDS
-    // int x;
-    // int y;
     static int size = 35;
 
     //constructors
     public Cell(int x, int y){
-        super(x,y,size,size);
-        //DELETE FIELDS
-        // this.x = x;
-        // this.y = y;
+        super(x, y, size, size);
     }
 
     //methods
@@ -27,10 +20,10 @@ class Cell extends Rectangle {
         g.drawRect(x,y,size,size);
     }
 
+    @Override
     public boolean contains(Point p){
         if (p != null){
-            return super.contains(p);
-            // return (x < p.x && x+size > p.x && y < p.y && y+size > p.y);
+            return(super.contains(p));
         } else {
             return false;
         }

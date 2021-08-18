@@ -1,16 +1,26 @@
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 
-public class Boat implements Actor{
+public class Boat extends Actor {
+    public Boat(Cell inLoc) {
+        loc = inLoc;
+        color = Color.ORANGE;
 
-    Cell position;
+        Polygon leftSail = new Polygon();
+        leftSail.addPoint(loc.x + 16, loc.y + 11);
+        leftSail.addPoint(loc.x + 11, loc.y + 24);
+        leftSail.addPoint(loc.x + 16, loc.y + 24);
+        Polygon rightSail = new Polygon();
+        rightSail.addPoint(loc.x + 18, loc.y + 7);
+        rightSail.addPoint(loc.x + 24, loc.y + 24);
+        rightSail.addPoint(loc.x + 18, loc.y + 24);
+        Polygon body = new Polygon();
+        body.addPoint(loc.x + 6, loc.y + 24);
+        body.addPoint(loc.x + 29, loc.y + 24);
+        body.addPoint(loc.x + 24, loc.y + 29);
+        body.addPoint(loc.x + 11, loc.y + 29);
 
-    public Boat(Cell position) {
-        this.position = position;
-    }
-
-    public void paint(Graphics g) {
-        g.setColor(Color.ORANGE);
-        g.fillRect(position.x, position.y, position.width, position.height);
+    polygons.add(leftSail);
+    polygons.add(rightSail);
+    polygons.add(body);
     }
 }
