@@ -45,3 +45,177 @@ Modify the program to make these things happen.  Make a `Grid` class and a `Cell
 # Task 5
 
 Anything that is a `JFrame` or `JPanel` can find out the position of the mouse using `getMousePosition`.  Modify your program so that mousing over a cell will "highlight" it.  Highlighted cells should be drawn in grey.  You may have to think about how you will get the mouse position from the place you can read it, to the place it is needed (the `paint` method of a `Cell` object).
+
+# Task 6
+
+Our `Cell` class is really a specialised rectangle and the Java API already has a `Rectangle` class.  Have `Cell` inherit from `java.awt.Rectangle` (https://docs.oracle.com/javase/8/docs/api/java/awt/Rectangle.html).  It will be good to call `super` in the `Cell` constructor and to use the `contains` method that comes in `Rectangle` instead of your own.  NB:  The `contains` we wrote was graceful when given a `null` pointer for the point, the one from `Rectangle` is not, you will need to "protect" it in some way.
+
+# Task 7
+
+Define a `Stage` class that can contain one `Grid` object and many `Actor` objects.  There must be three separate actors, each a subclass of a `Actor` _interface_ and each must have its own `paint` method.  The `paint` method must take a `Graphics` parameter and draw the actor on that graphic.  Have the `paint` method specified in the `Actor` interface and have each subclass define it.
+
+Since `Actors`s are drawing themselves, they need to know where they are on the screen so each will have a `Cell` field (that is set in the constructor) indicating where on the grid they are.
+
+Have the program start with 1 grid and 3 actors:
+
+  * Train (drawn red)
+  * Car (drawn purple)
+  * Boat (drawn orange)
+
+# Task 8
+
+Have a close look at your `Train`, `Car` and `Boat` classes.  If they are anything like mine they are _all the same except for the colour they use_.  This repetition is "a bad thing" because if the same thing is done in three different places, we need to remember that updating one requires us to update all three.
+
+Is there a place that you could put all the common parts?
+
+🤔 Will this work given what you currently have?  If not, what would we need to change?
+
+# Task 9
+
+Draw a picture of the inheritance hierarchy you have created.  You should (loosely) use [UML notation](http://www.csci.csusb.edu/dick/cs201/uml.html) for your diagram.  You are using UML In this case, and all through this course, only for "a rough sketch of an idea".
+
+# Task 10
+
+Did you notice the repetition in the stage paint method?  All three actors have the `paint` method called on them.  In fact, we might later want to have dozens of actors on the stage at any one time, we don't want dozens of calls to `someone.paint(g);`.  What we need is a collection to store all the actors, something like an array that we can put them all in.  Then we can just loop over that array and call  `paint` on every element.  _I think_ we should use an `ArrayList` (https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html).  Notice it is a generic collection?  You will need to use generics to make this work.  Put all the actors in a single array list called `actors` and then loop over this list to paint them.  Once you have done that you might like to add more actors to the stage.
+
+🤔 In my solution, I will declare the actors list as a `List` instead of an `ArrayList`.  Any idea why?  Why does this even work?
+
+# Task 11
+
+Turns out you are not able to use colours to distinguish the different types of actors!  You are going to need to draw little shapes to represent them.  You have been told you can't use images, you have to draw with Java2D primitives so the game can scale up and down as required.  The `Graphics` objects we are painting on know how to draw `Polygon`s (https://docs.oracle.com/javase/8/docs/api/java/awt/Polygon.html) so that is what we are going to use.  However, one polygon is not enough for each actor, we need each to be made of a list of polygons.  We will use `ArrayList` again!  Have the `Color` field of `Actor` changed to a list of polygons and initialise each subclass to an appropriate set of polygons.  You might find the following polygons a useful starting point where `location` is the top-left point of the vehicle (but I am sure you can do better as well - share your designs on the forums!):
+
+## Train
+
+~~~~~
+int sides=20;
+int angle;
+double circleX;
+double circleY;
+Polygon rearWheel = new Polygon();
+Polygon midWheel = new Polygon();
+Polygon frontWheel = new Polygon();
+angle = 360/sides;
+for(int s=0; s<=sides; s++) {
+  circleX = (3.0*Math.sin(Math.toRadians(s*angle)));
+  circleY = (3.0*Math.cos(Math.toRadians(s*angle)));
+  rearWheel.addPoint(loc.x + 9 + (int) circleX, loc.y + 25 + (int) circleY);
+  midWheel.addPoint(loc.x + 17 + (int) circleX, loc.y + 25 + (int) circleY);
+  frontWheel.addPoint(loc.x + 23 + (int) circleX, loc.y + 25 + (int) circleY);
+}
+Polygon cab = new Polygon();
+cab.addPoint(loc.x + 6, loc.y + 7);
+cab.addPoint(loc.x + 11, loc.y + 7);
+cab.addPoint(loc.x + 11, loc.y + 20);
+cab.addPoint(loc.x + 6, loc.y + 20);
+Polygon body = new Polygon();
+body.addPoint(loc.x + 11, loc.y + 14);
+body.addPoint(loc.x + 24, loc.y + 14);
+body.addPoint(loc.x + 29, loc.y + 20);
+body.addPoint(loc.x + 11, loc.y + 20);
+~~~~~
+
+## Car
+
+~~~~~
+int sides=20;
+int angle;
+double circleX;
+double circleY;
+Polygon rearWheel = new Polygon();
+Polygon frontWheel = new Polygon();
+angle = 360/sides;
+for(int s=0; s<=sides; s++) {
+  circleX = (4.0*Math.sin(Math.toRadians(s*angle)));
+  circleY = (4.0*Math.cos(Math.toRadians(s*angle)));
+  rearWheel.addPoint(loc.x + 11 + (int) circleX, loc.y + 25 + (int) circleY);
+  frontWheel.addPoint(loc.x + 24 + (int) circleX, loc.y + 25 + (int) circleY);
+}
+Polygon body = new Polygon();
+body.addPoint(loc.x + 6, loc.y + 14);
+body.addPoint(loc.x + 29, loc.y + 14);
+body.addPoint(loc.x + 29, loc.y + 20);
+body.addPoint(loc.x + 6, loc.y + 20);
+Polygon top = new Polygon();
+top.addPoint(loc.x + 11, loc.y + 7);
+top.addPoint(loc.x + 20, loc.y + 7);
+top.addPoint(loc.x + 24, loc.y + 14);
+top.addPoint(loc.x + 11, loc.y + 14);
+~~~~~
+
+## Boat
+
+~~~~~
+Polygon leftSail = new Polygon();
+leftSail.addPoint(loc.x + 16, loc.y + 11);
+leftSail.addPoint(loc.x + 11, loc.y + 24);
+leftSail.addPoint(loc.x + 16, loc.y + 24);
+Polygon rightSail = new Polygon();
+rightSail.addPoint(loc.x + 18, loc.y + 7);
+rightSail.addPoint(loc.x + 24, loc.y + 24);
+rightSail.addPoint(loc.x + 18, loc.y + 24);
+Polygon body = new Polygon();
+body.addPoint(loc.x + 6, loc.y + 24);
+body.addPoint(loc.x + 29, loc.y + 24);
+body.addPoint(loc.x + 24, loc.y + 29);
+body.addPoint(loc.x + 11, loc.y + 29);
+~~~~~
+
+# Task 12
+
+In this task we will add a method to the grid class that returns whatever cell is under a particular location.
+
+Such a method needs to take in a `Point` and return back a `Cell`.  It will do a simple calculation to turn the x and y coordinates into the right array indices and look them up.
+
+However, there are some areas on our stage where there are no cells, not to mention what to do when a `null` point is passed in!
+
+So, we need a method that _might_ return a `Cell`.  What should it do when it can't find a cell?  Return `null`?  Definitely not!!!!  You are just asking for a asking for null-pointer exception if you do that.  Instead, we will use the `Optional` generic container (https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html).  
+
+Add the following method to `Grid` that will return whatever cell is located around the point that is passed in.
+
+~~~~~
+public Optional<Cell> cellAtPoint(Point p)
+~~~~~
+
+🤔 How about we improve the `cellAtColRow` method now we know about optional containers?
+
+🤔 Now that we have `cellAtPoint`, lets use it.  Grow the app window to 1024x720 so we have some clear space to the right of the grid.  In this space, put the details of whatever cell we are hoving over.  For example, you might put the type of cell that is located there, and what it's elevation is.  There are many ways to do this, but one good way is to call `cellAtPoint` while painting the stage and use the resulting cell information.
+# Task 13
+
+Our task now is to add the ability to read in configuration data from a file.  Someone else at the company (person A) has tried and has committed some broken code.
+
+A file is kept in a "data" folder called "stage1.rvb". That file has one line for each configuration item.  We begin with just the character locations.
+
+This all seems OK, but they are getting an error on the build.  Track down the error and fix it for them.
+
+# Task 14
+
+At the moment, the file reading code will thrown an exception if it fails to read a file.  You should change this code so that _it won't ever throw an exception_.  This means you will have to think hard about what to do on a failed file read.
+
+# Task 15
+
+Currently, the game loop (in `Main.run`) is running as fast as it can.   This just burns CPU cycles and heats up your computer needlessly.  Your task is to "fix" the frame-rate so we are not pointlessly burning CPU power. You can do this by asking the current thread to sleep for a period of time using `Thread.sleep`. We want the frame-rate to be about 50 frames per second, that means we need the loop to take 20ms to complete.
+
+Sleeping a thread throws an `InterruptedException` so you will need to catch that. In fact, we don't care about the thread being interrupted so the catch block should just report the fact it was interrupted, print out a representation (via `toString`) of the exception that was thrown, and continue on as normal.
+
+🤔 Can you even cause the exception to be thrown?
+
+# Task 16
+
+Add the following method to the `Grid` class
+
+~~~~~
+    /**
+     * Takes a cell consumer (i.e. a function that has a single `Cell` argument and
+     * returns `void`) and applies that consumer to each cell in the grid.
+     * @param func The `Cell` to `void` function to apply at each spot.
+     */
+    public void doToEachCell(Consumer<Cell> func) {
+      // Your job to add the body
+    }
+~~~~~
+
+ Notice that the method accepts a `Consumer` functional interface.
+
+ Now use this method to turn the `paint` method of the `Grid` class into a single line of code.  I.e. remove the double-nested loop and replace it with a call to `doToEachCell`.
+
+🤔 Can you find anywhere else this is useful?  🤔🤔 Can you make any other useful _higher order_ methods?

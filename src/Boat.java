@@ -1,10 +1,12 @@
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Polygon;
+import java.util.ArrayList;
 
 public class Boat extends Actor {
     public Boat(Cell inLoc) {
         loc = inLoc;
         color = Color.ORANGE;
-
+        display = new ArrayList<Polygon>();
         Polygon leftSail = new Polygon();
         leftSail.addPoint(loc.x + 16, loc.y + 11);
         leftSail.addPoint(loc.x + 11, loc.y + 24);
@@ -18,9 +20,8 @@ public class Boat extends Actor {
         body.addPoint(loc.x + 29, loc.y + 24);
         body.addPoint(loc.x + 24, loc.y + 29);
         body.addPoint(loc.x + 11, loc.y + 29);
-
-    polygons.add(leftSail);
-    polygons.add(rightSail);
-    polygons.add(body);
+        display.add(leftSail);
+        display.add(rightSail);
+        display.add(body);
     }
 }
