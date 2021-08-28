@@ -13,28 +13,30 @@ class StageReader {
             Properties props = (new Properties());
             props.load(new FileInputStream(path));
             for (String key : props.stringPropertyNames()) {
-                System.out.println(key);
                 String value = props.getProperty(key);
                 Pattern cell = Pattern.compile("(.)(\\d+)");
                 List<Cell> cellsInQuestion = new ArrayList<Cell>();
                 Matcher cellMatcher = cell.matcher(key);
                 if (cellMatcher.matches()) {
-                    System.out.println(cellMatcher);
                     char col = cellMatcher.group(1).charAt(0);
                     int row = Integer.parseInt(cellMatcher.group(2));
                     stage.grid.cellAtColRow(col, row).ifPresent(cellsInQuestion::add);
                 } else {
                     System.out.println("no match");
                 }
-                System.out.println(cellsInQuestion);
                 for (Cell c : cellsInQuestion) {
-                    System.out.println(c);
-                    if (value.equals("train")) {
-                        stage.actors.add(new Train(c));
-                    } else if (value.equals("car")) {
-                        stage.actors.add(new Car(c));
-                    } else if (value.equals("boat")) {
-                        stage.actors.add(new Boat(c));
+                    if (value.equals("train red")) {
+                        stage.actors.add(new Train(c, 1.0f));
+                    } else if (value.equals("train blue")) {
+                        stage.actors.add(new Train(c, 0.0f));
+                    } else if (value.equals("car red")) {
+                        stage.actors.add(new Car(c, 1.0f));
+                    } else if (value.equals("car blue")) {
+                        stage.actors.add(new Car(c, 0.0f));
+                    } else if (value.equals("boat red")) {
+                        stage.actors.add(new Boat(c, 1.0f));
+                    } else if (value.equals("boat blue")) {
+                        stage.actors.add(new Boat(c, 0.0f));
                     }
                 }
             }

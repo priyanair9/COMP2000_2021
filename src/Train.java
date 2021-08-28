@@ -1,11 +1,16 @@
-import java.awt.Color;
 import java.awt.Polygon;
 import java.util.ArrayList;
 
 public class Train extends Actor {
-    public Train(Cell inLoc) {
+    public Train(Cell inLoc, float inRedness) {
         loc = inLoc;
-        color = Color.RED;
+        redness = inRedness;
+        turns = 1;
+        moves = 5;
+        setPoly();
+    }
+
+    protected void setPoly() {
         display = new ArrayList<Polygon>();
         int sides=20;
         int angle;
