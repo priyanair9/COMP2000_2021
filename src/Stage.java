@@ -28,6 +28,12 @@ public class Stage {
         if (currentState == State.CPUMoving) {
             for(Actor a: actors) {
                 if (!a.isTeamRed()) {
+                    if(a.loc.row %2 == 0) {
+                        a.strat = new RandomMove();
+                    }
+                    else {
+                        a.strat = new LeftMostMove();
+                    }
                     List<Cell> possibleLocs = getClearRadius(a.loc, a.moves);
                     int moveCPUChooses = (new Random()).nextInt(possibleLocs.size());
                     a.setLocation(possibleLocs.get(moveCPUChooses));

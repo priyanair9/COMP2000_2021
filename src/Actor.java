@@ -9,6 +9,7 @@ public abstract class Actor {
     float redness;
     int turns;
     int moves;
+    MoveStrategy strat;
 
     public void paint(Graphics g) {
         for(Polygon p: display) {
