@@ -20,9 +20,9 @@ class Cell extends Rectangle {
         } else {
             g.setColor(Color.WHITE);
         }
-        g.fillRect(x,y,size,size);
+        g.fillRect(x, y, size, size);
         g.setColor(Color.BLACK);
-        g.drawRect(x,y,size,size);
+        g.drawRect(x, y, size, size);
     }
 
     @Override
@@ -32,5 +32,13 @@ class Cell extends Rectangle {
         } else {
             return false;
         }
+    }
+
+    public int leftOfComparison(Cell c){
+        return Character.compare(col, c.col);
+    }
+
+    public int aboveComparison(Cell c){
+        return Integer.compare(row, c.row);
     }
 }
