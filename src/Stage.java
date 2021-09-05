@@ -60,7 +60,7 @@ public class Stage {
         if(underMouse.isPresent()) {
             Cell hoverCell = underMouse.get();
             g.setColor(Color.DARK_GRAY);
-            String coord = String.valueOf(hoverCell.col) + String.valueOf(hoverCell.col);
+            String coord = String.valueOf(hoverCell.col) + String.valueOf(hoverCell.row);
             g.drawString(coord, margin, yLoc);
         }
 
