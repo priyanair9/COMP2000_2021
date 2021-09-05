@@ -9,6 +9,7 @@ public abstract class Actor {
     float redness;
     int turns;
     int moves;
+    MoveStrategy strat;
 
     public void paint(Graphics g) {
         for(Polygon p: display) {
@@ -25,8 +26,13 @@ public abstract class Actor {
         return redness >= 0.5;
     }
 
-    public void setLocation(Cell loc) {
-        this.loc = loc;
+    public void setLocation(Cell inLoc) {
+        loc = inLoc;
+        if (loc.row % 2 == 0) {
+            strat = new RandomMove();
+        } else {
+            strat = new LeftMostMove();
+        }
         setPoly();
     }
 }

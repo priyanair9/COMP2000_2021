@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 public class Stage {
     Grid grid;
@@ -29,8 +28,8 @@ public class Stage {
             for(Actor a: actors) {
                 if (!a.isTeamRed()) {
                     List<Cell> possibleLocs = getClearRadius(a.loc, a.moves);
-                    int moveCPUChooses = (new Random()).nextInt(possibleLocs.size());
-                    a.setLocation(possibleLocs.get(moveCPUChooses));
+                    Cell nextLoc = a.strat.chooseNextLoc(possibleLocs);
+                    a.setLocation(nextLoc);
                 }
             }
             currentState = State.ChoosingActor;

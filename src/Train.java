@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Train extends Actor {
     public Train(Cell inLoc, float inRedness) {
-        loc = inLoc;
+        setLocation(inLoc);
         redness = inRedness;
         turns = 1;
         moves = 5;
