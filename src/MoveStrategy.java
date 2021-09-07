@@ -1,5 +1,5 @@
 import java.util.List;
 
-public interface MoveStrategy {
+interface MoveStrategy {
     public Cell chooseNextLoc(List<Cell> possibleLocs);
 }

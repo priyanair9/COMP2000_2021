@@ -1,15 +1,19 @@
 import java.util.List;
 
 public class LeftMostMove implements MoveStrategy {
-    
     @Override
     public Cell chooseNextLoc(List<Cell> possibleLocs) {
-        Cell currLN = possibleLocs.get(0);
+        Cell currLM = possibleLocs.get(0);
         for(Cell c: possibleLocs) {
-            if(c.leftOfComparison(currLN) < 0) {
-                currLN = c;
+            if (c.leftOfComparison(currLM) < 0) {
+                currLM = c;
             }
         }
-        return currLN;
+        return currLM;
+    }
+
+
+    public String toString() {
+        return "left-most movement strategy";
     }
 }
