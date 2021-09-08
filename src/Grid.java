@@ -44,7 +44,6 @@ class Grid implements Iterable<Cell> {
         return cellAtColRow(labelToCol(c), r);
     }
     public Optional<Cell> cellAtPoint(Point p) {
-
         //CHANGED THIS LOOP
         // for(int i=0; i < cells.length; i++) {
         //     for(int j=0; j < cells[i].length; j++) {
