@@ -1,7 +1,11 @@
 import java.awt.Graphics;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class Grid {
   private Cell[][] cells = new Cell[20][20];
@@ -9,7 +13,12 @@ class Grid {
 
   public Grid() {
     int elevation;
+    // The grid is 20x20=400 cells
+    // Create a list of integers numbered 0 through 399
+    List<Integer> distribution = new ArrayList<Integer>();
+    distribution = IntStream.rangeClosed(0, 20 * 20 - 1).boxed().collect(Collectors.toList());
     int current;
+    int index;
     int grassCount = 0;
     int buildingCount = 0;
     int roadCount = 0;
@@ -26,34 +35,38 @@ class Grid {
         // use the element's value to determine
         // which cell type to instantiate
         // and then remove that element from the list
-        // so that there are no repeats 
-        current = rand.nextInt(100);
+        // so that there are no repeats
+        index = rand.nextInt(distribution.size());
+        current = distribution.get(index);
+        distribution.remove(index);
         //  Road: 10%
+        char c = colToLabel(i);
         int x = 10 + 35 * i;
         int y = 10 + 35 * j;
-        if (current < 10) {
+        //  Road: 10% of 400 = 40
+        if (current < 40) {
           roadCount++;
-          cells[i][j] = new Road(colToLabel(i), j, x, y, elevation);
+          cells[i][j] = new Road(c, j, x, y, elevation);
         }
-        // Water: 20%
-        if (current >= 10 && current < 30) {
+        // Water: 20% of 400 = 80
+        if (current >= 40 && current < 120) {
           waterCount++;
-          cells[i][j] = new Water(colToLabel(i), j, x, y, elevation);
+          cells[i][j] = new Water(c, j, x, y, elevation);
         }
-        // Grass: 40%
-        if (current >= 30 && current < 70) {
+        // Grass: 40% of 400 = 160
+        if (current >= 120 && current < 280) {
           grassCount++;
-          cells[i][j] = new Grass(colToLabel(i), j, x, y, elevation);
+          cells[i][j] = new Grass(c, j, x, y, elevation);
         }
-        // Mountain: 25%
-        if (current >= 70 && current < 95) {
+        // Mountain: 25% of 400 = 100
+        if (current >= 280 && current < 380) {
           mountainCount++;
-          cells[i][j] = new Mountain(colToLabel(i), j, x, y, elevation);
+          cells[i][j] = new Mountain(c, j, x, y, elevation);
         }
-        // Buildings: 5%
-        if (current >= 95 && current < 100) {
+        // Buildings: 5% of 400 = 20
+        if (current >= 380 && current < 400) {
           buildingCount++;
-          cells[i][j] = new Building(colToLabel(i), j, x, y);
+          cells[i][j] = new Building(c, j, x, y);
         }
       }
     }
