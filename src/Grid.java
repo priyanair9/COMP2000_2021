@@ -1,14 +1,18 @@
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 class Grid {
-  private Cell[][] cells = new Cell[20][20];
+  Cell[][] cells = new Cell[20][20];
   private static Random rand = new Random();
 
   public Grid() {
@@ -19,11 +23,6 @@ class Grid {
     distribution = IntStream.rangeClosed(0, 20 * 20 - 1).boxed().collect(Collectors.toList());
     int current;
     int index;
-    int grassCount = 0;
-    int buildingCount = 0;
-    int roadCount = 0;
-    int mountainCount = 0;
-    int waterCount = 0;
     for (int i = 0; i < cells.length; i++) {
       for (int j = 0; j < cells[i].length; j++) {
         // altitude vary over the following range:
@@ -39,48 +38,29 @@ class Grid {
         index = rand.nextInt(distribution.size());
         current = distribution.get(index);
         distribution.remove(index);
-        //  Road: 10%
         char c = colToLabel(i);
         int x = 10 + 35 * i;
         int y = 10 + 35 * j;
         //  Road: 10% of 400 = 40
         if (current < 40) {
-          roadCount++;
           cells[i][j] = new Road(c, j, x, y, elevation);
         }
         // Water: 20% of 400 = 80
         if (current >= 40 && current < 120) {
-          waterCount++;
           cells[i][j] = new Water(c, j, x, y, elevation);
         }
         // Grass: 40% of 400 = 160
         if (current >= 120 && current < 280) {
-          grassCount++;
           cells[i][j] = new Grass(c, j, x, y, elevation);
         }
         // Mountain: 25% of 400 = 100
         if (current >= 280 && current < 380) {
-          mountainCount++;
           cells[i][j] = new Mountain(c, j, x, y, elevation);
         }
         // Buildings: 5% of 400 = 20
         if (current >= 380 && current < 400) {
-          buildingCount++;
           cells[i][j] = new Building(c, j, x, y);
         }
-      }
-    }
-    System.out.printf("Road: %d, expected %2.0f\n", roadCount, 20 * 20 * 0.10);
-    System.out.printf("Water: %d, expected %2.0f\n", waterCount, 20 * 20 * 0.20);
-    System.out.printf("Grass: %d, expected %2.0f\n", grassCount, 20 * 20 * 0.40);
-    System.out.printf("Mountains: %d, expected %2.0f\n", mountainCount, 20 * 20 * 0.25);
-    System.out.printf("Buildings: %d, expected %2.0f\n", buildingCount, 20 * 20 * 0.05);
-  }
-
-  public void paint(Graphics g, Point mousePos) {
-    for (int i = 0; i < cells.length; i++) {
-      for (int j = 0; j < cells[i].length; j++) {
-        cells[i][j].paint(g, mousePos);
       }
     }
   }
@@ -91,6 +71,10 @@ class Grid {
 
   private int labelToCol(char col) {
     return (int) col - 65;
+  }
+
+  public void paint(Graphics g, Point mousePos) {
+    doToEachCell((Cell c) -> c.paint(g, mousePos));
   }
 
   private Optional<Cell> cellAtColRow(int c, int r) {
@@ -130,5 +114,67 @@ class Grid {
 
   public void replaceCell(Cell old, Cell replacement) {
     cells[labelToCol(old.col)][old.row] = replacement;
+  }
+
+  /**
+   * Takes a cell consumer (i.e. a function that has a single `Cell` argument and
+   * returns `void`) and applies that consumer to each cell in the grid.
+   *
+   * @param func The `Cell` to `void` function to apply at each spot.
+   */
+  public void doToEachCell(Consumer<Cell> func) {
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        func.accept(cells[i][j]);
+      }
+    }
+  }
+
+  public void paintOverlay(Graphics g, List<Cell> cells, Color color) {
+    g.setColor(color);
+    for (Cell c : cells) {
+      g.fillRect(c.x + 2, c.y + 2, c.width - 4, c.height - 4);
+    }
+  }
+
+  public List<Cell> getRadius(Cell from, int size, boolean considerElevation) {
+    int i = labelToCol(from.col);
+    int j = from.row;
+    Set<Cell> inRadius = new HashSet<Cell>();
+    if (size > 0) {
+      cellAtColRow(colToLabel(i), j - 1).ifPresent(inRadius::add);
+      cellAtColRow(colToLabel(i), j + 1).ifPresent(inRadius::add);
+      cellAtColRow(colToLabel(i - 1), j).ifPresent(inRadius::add);
+      cellAtColRow(colToLabel(i + 1), j).ifPresent(inRadius::add);
+    }
+
+    for (Cell c : inRadius.toArray(new Cell[0])) {
+      if (considerElevation) {
+        if (c instanceof Landscape) {
+          Landscape here = (Landscape) from;
+          Landscape there = (Landscape) c;
+          if (here.elevation() > there.elevation()) {
+            inRadius.addAll(getRadius(c, size, true));
+          } else {
+            inRadius.addAll(getRadius(c, size - 1, true));
+          }
+        } else {
+          inRadius.remove(c);
+        }
+      } else {
+        inRadius.addAll(getRadius(c, size - 1, false));
+      }
+    }
+    return new ArrayList<Cell>(inRadius);
+  }
+
+  public String toString() {
+    String retval = new String();
+    for (int i = 0; i < cells.length; i++) {
+      for (int j = 0; j < cells[i].length; j++) {
+        retval = retval + cells[i][j];
+      }
+    }
+    return retval;
   }
 }

@@ -10,8 +10,8 @@ class Cell extends Rectangle {
   protected char col;
   protected int row;
 
-  public Cell(char inCol, int inRow, int x, int y) {
-    super(x, y, size, size);
+  public Cell(char inCol, int inRow, int inX, int inY) {
+    super(inX, inY, size, size);
     col = inCol;
     row = inRow;
   }
@@ -22,13 +22,9 @@ class Cell extends Rectangle {
     } else {
       g.setColor(color);
     }
-    g.fillRect(x, y, size,size);
+    g.fillRect(x, y, size, size);
     g.setColor(Color.BLACK);
-    g.drawRect(x, y, size,size);
-  }
-
-  public String describe() {
-    return description;
+    g.drawRect(x, y, size, size);
   }
 
   @Override
@@ -38,5 +34,17 @@ class Cell extends Rectangle {
     } else {
       return false;
     }
+  }
+
+  public int leftOfComparison(Cell c) {
+    return Character.compare(col, c.col);
+  }
+
+  public int aboveComparison(Cell c) {
+    return Integer.compare(row, c.row);
+  }
+
+  public String toString() {
+    return Character.toString(col) + Integer.toString(row) + ":" + description;
   }
 }

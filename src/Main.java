@@ -1,16 +1,24 @@
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 class Main extends JFrame {
-  class App extends JPanel {
+    
+  class App extends JPanel implements MouseListener {
+    
     Stage stage;
 
     public App() {
       setPreferredSize(new Dimension(1024, 720));
+      this.addMouseListener(this);
       stage = StageReader.readStage("data/stage1.rvb");
     }
 
@@ -18,32 +26,54 @@ class Main extends JFrame {
     public void paint(Graphics g) {
       stage.paint(g, getMousePosition());
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+      stage.mouseClicked(e.getX(), e.getY());
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {}
+
+    @Override
+    public void mouseReleased(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
   }
 
   public static void main(String[] args) throws Exception {
+    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    File fp2025 = new File("data/full_pack_2025.ttf");
+    ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, fp2025));
     Main window = new Main();
     window.run();
   }
 
-  final App canvas;
-
   private Main() {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    canvas = new App();
+    App canvas = new App();
     this.setContentPane(canvas);
     this.pack();
     this.setVisible(true);
   }
 
   public void run() {
-    // updates the window only when the mouse moves
-    // fixing this was not part of the requirements
-    // however, it places fewer demands on the computer
-    this.addMouseMotionListener(new MouseMotionAdapter() {
-        @Override
-        public void mouseMoved(MouseEvent e) {
-            canvas.repaint();
-        }
-    });
+    while (true) {
+      Instant startTime = Instant.now();
+      this.repaint();
+      Instant endTime = Instant.now();
+      long howLong = Duration.between(startTime, endTime).toMillis();
+      try {
+        Thread.sleep(20L - howLong);
+      } catch (InterruptedException e) {
+        System.out.println("thread was interrupted, but who cares?");
+      } catch (IllegalArgumentException e) {
+        System.out.println("application can't keep up with framerate");
+      }
+    }
   }
 }
