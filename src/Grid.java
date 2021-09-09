@@ -93,8 +93,16 @@ class Grid {
     return (int) col - 65;
   }
 
-  public Cell cellAtColRow(int c, int r) {
-    return cells[c][r];
+  private Optional<Cell> cellAtColRow(int c, int r) {
+    if (c >= 0 && c < cells.length && r >= 0 && r < cells[c].length) {
+      return Optional.of(cells[c][r]);
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  public Optional<Cell> cellAtColRow(char c, int r) {
+    return cellAtColRow(labelToCol(c), r);
   }
 
   public Optional<Cell> cellAtPoint(Point p) {
@@ -106,5 +114,21 @@ class Grid {
       }
     }
     return Optional.empty();
+  }
+
+  public List<Cell> cellsInRange(char c1, int r1, char c2, int r2) {
+    int c1i = labelToCol(c1);
+    int c2i = labelToCol(c2);
+    List<Cell> output = new ArrayList<Cell>();
+    for (int i = c1i; i <= c2i; i++) {
+      for (int j = r1; j <= r2; j++) {
+        cellAtColRow(colToLabel(i), j).ifPresent(output::add);
+      }
+    }
+    return output;
+  }
+
+  public void replaceCell(Cell old, Cell replacement) {
+    cells[labelToCol(old.col)][old.row] = replacement;
   }
 }

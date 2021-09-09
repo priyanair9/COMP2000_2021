@@ -13,9 +13,6 @@ class Stage {
   public Stage() {
     grid = new Grid();
     actors = new ArrayList<Actor>();
-    actors.add(new Train(grid.cellAtColRow(0, 0)));
-    actors.add(new Car(grid.cellAtColRow(0, 15)));
-    actors.add(new Boat(grid.cellAtColRow(12, 9)));
   }
 
   public void paint(Graphics g, Point mouseLoc) {

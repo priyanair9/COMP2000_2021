@@ -4,6 +4,7 @@ import java.awt.Graphics;
 abstract class Actor {
   Color color;
   Cell loc;
+  float redness;
 
   public void paint(Graphics g) {
     g.setColor(color);
