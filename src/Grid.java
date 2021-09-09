@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
-class Grid {
+class Grid implements Iterable<Cell> {
     Cell[][] cells = new Cell[20][20];
 
     public Grid() {
@@ -43,11 +43,9 @@ class Grid {
         return cellAtColRow(labelToCol(c), r);
     }
     public Optional<Cell> cellAtPoint(Point p) {
-        for(int i=0; i < cells.length; i++) {
-            for(int j=0; j < cells[i].length; j++) {
-                if(cells[i][j].contains(p)) {
-                    return Optional.of(cells[i][j]);
-                }
+        for(Cell c: this) {
+            if(c.contains(p)) {
+                return Optional.of(c);
             }
         }
         return Optional.empty();
@@ -60,12 +58,10 @@ class Grid {
      * @param func The `Cell` to `void` function to apply at each spot.
      */
     public void doToEachCell(Consumer<Cell> func) {
-        for(int i = 0; i < cells.length; i++){
-            for(int j = 0; j < cells[i].length; j++) {
-                func.accept(cells[i][j]);
-            }
+        for(Cell c: this) {
+            func.accept(c);
         }
-      }
+    }
 
     public void paintOverlay(Graphics g, List<Cell> cells, Color color) {
         g.setColor(color);
@@ -89,5 +85,10 @@ class Grid {
             inRadius.addAll(getRadius(c, size - 1));
         }
         return new ArrayList<Cell>(inRadius);
+    }
+
+    @Override
+    public CellIterator iterator() {
+        return new CellIterator(cells);
     }
 }
