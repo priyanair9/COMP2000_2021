@@ -1,36 +1,36 @@
-import java.util.Iterator;
+import java.util.*;
 
-public class CellIterator implements Iterator<Cell>{
-    Cell[][] cells;
-    int idx1;
-    int idx2;
-    boolean noMoreCells;
+public class CellIterator implements Iterator<Cell> {
+    Cell[][] data;
+    int outer;
+    int inner;
+    boolean runOut;
 
-    CellIterator(Cell[][] cells) {
-        this.cells = cells;
-        this.idx1 = 0;
-        this.idx2 = 0;
-        this.noMoreCells = false;
+    public CellIterator(Cell[][] data){
+        this.data = data;
+        outer = 0;
+        inner = 0;
+        runOut = false;
     }
 
     @Override
     public boolean hasNext() {
-        return !noMoreCells;
+        return !runOut;
     }
 
     @Override
     public Cell next() {
-        Cell nextCell = cells[idx1][idx2];
-        idx2++;
-
-        if(idx2 >= cells[idx1].length && idx1 < cells.length) {
-            idx1++;
-            idx2 = 0;
+        Cell ret = data[outer][inner];
+        inner++;
+        if (inner >= data[outer].length){
+            inner = 0;
+            outer++;
+            if (outer >= data.length){
+                runOut = true;
+            }
         }
 
-        if(idx1 >= cells.length && idx2 >= cells[idx1].length) {
-            noMoreCells = true;
-        }
-        return nextCell;
+        return ret;
     }
+
 }

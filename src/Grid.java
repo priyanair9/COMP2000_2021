@@ -44,17 +44,8 @@ class Grid implements Iterable<Cell> {
         return cellAtColRow(labelToCol(c), r);
     }
     public Optional<Cell> cellAtPoint(Point p) {
-        //CHANGED THIS LOOP
-        // for(int i=0; i < cells.length; i++) {
-        //     for(int j=0; j < cells[i].length; j++) {
-        //         if(cells[i][j].contains(p)) {
-        //             return Optional.of(cells[i][j]);
-        //         }
-        //     }
-        // }
-
-        for(Cell[] col: cells) {
-            for(Cell c: col) {
+        for(Cell c: this) {
+            if(c.contains(p)) {
                 return Optional.of(c);
             }
         }
@@ -68,18 +59,10 @@ class Grid implements Iterable<Cell> {
      * @param func The `Cell` to `void` function to apply at each spot.
      */
     public void doToEachCell(Consumer<Cell> func) {
-        // CHANGED THIS LOOP
-        // for(int i = 0; i < cells.length; i++){
-        //     for(int j = 0; j < cells[i].length; j++) {
-        //         func.accept(cells[i][j]);
-        //     }
-        // }
-        for(Cell[] col: cells) {
-            for(Cell c: col) {
-                func.accept(c);
-            }
+        for(Cell c: this) {
+            func.accept(c);
         }
-      }
+    }
 
     public void paintOverlay(Graphics g, List<Cell> cells, Color color) {
         g.setColor(color);
