@@ -283,28 +283,28 @@ public class AnimationBeat {
     }
 
     // returns which phase the animation is currently in
-    public char inPhase(){
+    public char inPhase() {
         long currTime = System.currentTimeMillis();
-        long rem = (currTime - started) % (a + b);
-        if (rem > a + b){
+        long rem = (currTime - started) % (a + b + c);
+        if (rem > a + b) {
             return 'c';
         } else if (rem > a) {
             return 'b';
         } else {
-            return 'c';
+            return 'a';
         }
     }
 
     // returns a number (out of 100) showing the percentage completion of this phase
-    public long phaseCompletion(){ 
+    public long phaseCompletion() { 
         long currTime = System.currentTimeMillis();
-        long rem = (currTime - started) % (a + b+c);
-        if (rem > a+b){
-            return ((rem -a-b)*100)/c;
-        } else if (rem > a){
-            return ((rem - a)*100)/b;
+        long rem = (currTime - started) % (a + b + c);
+        if (rem > a + b) {
+            return ((rem -a - b) * 100) / c;
+        } else if (rem > a) {
+            return ((rem - a) * 100) / b;
         } else {
-            return rem*100/a;
+            return rem * 100 / a;
         }
 
     }
