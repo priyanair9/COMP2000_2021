@@ -20,6 +20,7 @@ public class Stage {
         cellOverlay = new ArrayList<Cell>();
         actorInAction = Optional.empty();
         currentState = State.ChoosingActor;
+        AnimationBeat.getInstance();
     }
 
     public void paint(Graphics g, Point mouseLoc) {
