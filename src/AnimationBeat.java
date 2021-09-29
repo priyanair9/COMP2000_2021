@@ -3,8 +3,9 @@ public class AnimationBeat {
     private long a; // length of phase a
     private long b; // length of phase b
     private long c; // length of phase c
+    private static AnimationBeat instance;
    
-    public AnimationBeat(){
+    private AnimationBeat(){
         started = System.currentTimeMillis();
         this.a = 5000;
         this.b = 500;
@@ -37,4 +38,11 @@ public class AnimationBeat {
         }
 
     }
+    public static AnimationBeat getInstance() {
+        if(instance == null) {
+              instance = new AnimationBeat();
+         }
+        return instance;
+   }
+
 }
