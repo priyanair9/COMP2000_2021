@@ -8,8 +8,8 @@ public class AnimationBeat {
     private AnimationBeat(){
         started = System.currentTimeMillis();
         this.a = 5000;
-        this.b = 500;
-        this.c = 500;
+        this.b = 100;
+        this.c = 300;
     }
 
     // returns which phase the animation is currently in
