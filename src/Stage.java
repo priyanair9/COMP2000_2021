@@ -77,7 +77,10 @@ public class Stage {
             g.drawString("redness:", labelIndent, yLoc+2*vTab);
             g.drawString(Float.toString(a.redness), valueIndent, yLoc+2*vTab);
         }
-    }
+        yLoc = yLoc + 3*blockVT;
+        Motif torch = new Motif("images/torch.png");
+        torch.draw(g, labelIndent, yLoc, Color.YELLOW);
+      }
 
     public List<Cell> getClearRadius(Cell from, int size) {
         List<Cell> init = grid.getRadius(from, size);
