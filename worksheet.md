@@ -321,3 +321,10 @@ A collegue has provided you with a library as a [jar file](https://docs.oracle.c
 Your collegue's library contains only one class, called `Motif`.  This class allows you to load an image from a file and then draw it anywhere on the screen in the color of your choice (similar to a grayscale image, but any color can be chosen, not just gray).  An example of its use has been added to `Stage` (look for the instance variable called `torch`).
 
 We would like to use this class to add new player types to the game, however `Motif` is not a subclass of `Actor`.  Use the adapter pattern to add a new `Actor` type called `Horse`.  Note that because `Actor` is an abstract base class and not a Java interface it will be easier if you vary the pattern slightly from what is shown in the textbook.  The image file you use should be one of the chess icons included in the `images/data` subdirectory, specifically `Chess_tile_nl.png`.
+
+`Motif` has the following two public methods:
+
+  * `public Motif(String filename)`
+  * `public void draw(Graphics g, int x, int y, Color c)`
+
+Where the first is the constructor, `filename` is the path to the image file. For the second method, `x` and `y` are the location on the screen and `c` is the color you wish to render the image in.
