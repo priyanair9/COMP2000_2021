@@ -13,7 +13,7 @@ public class Horse extends Actor {
   }
 
   protected void setPoly() {
-    icon = new Motif("images/Chess_tile_nl.png");
+    icon = new Motif("images/chess/Chess_tile_nl.png");
   }
 
   @Override
