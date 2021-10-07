@@ -37,10 +37,10 @@ class StageReader {
                         stage.actors.add(new Boat(c, 1.0f));
                     } else if (value.equals("boat blue")) {
                         stage.actors.add(new Boat(c, 0.0f));
-                    } else if (value.equals("horse red")) {
-                        stage.actors.add(new Horse(c, 1.0f));
-                    } else if (value.equals("horse blue")) {
-                        stage.actors.add(new Horse(c, 0.0f));
+                    // } else if (value.equals("horse red")) {
+                    //     stage.actors.add(new Horse(c, 1.0f));
+                    // } else if (value.equals("horse blue")) {
+                    //     stage.actors.add(new Horse(c, 0.0f));
                     }
                 }
             }
