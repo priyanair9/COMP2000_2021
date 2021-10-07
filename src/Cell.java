@@ -16,7 +16,7 @@ class Cell extends Rectangle {
 
     void paint(Graphics g, Point mousePos) {
         if(contains(mousePos)) {
-            g.setColor(Color.GRAY);
+            g.setColor(new Color(0.5f,0.5f, 0.5f, AnimationBeat.getInstance().phaseCompletion()/100f));
         } else {
             g.setColor(Color.WHITE);
         }
