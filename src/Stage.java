@@ -35,25 +35,21 @@ class Stage {
     grid.paint(g, mouseLoc);
     grid.paintOverlay(g, cellOverlay, new Color(0f, 0f, 1f, 0.5f));
 
-    for (Actor a : actors) {
-      a.paint(g);
-    }
+    actors.forEach(a -> a.paint(g));
 
     int yloc = 20;
     sidePanel.paint(g, yloc, mouseLoc);
 
     // menu overlay (on top of everything else)
-    for (MenuItem mi: menuOverlay) {
-      mi.paint(g);
-    }
+    menuOverlay.forEach(mi -> mi.paint(g));
   }
 
   List<Cell> getClearRadius(Cell from, int size, boolean considerElevation) {
-    List<Cell> init = grid.getRadius(from, size, considerElevation);
+    List<Cell> clearCells = grid.getRadius(from, size, considerElevation);
     for (Actor a : actors) {
-      init.remove(a.loc);
+      clearCells.remove(a.location());
     }
-    return init;
+    return clearCells;
   }
 
   void mouseClicked(int x, int y) {
@@ -62,7 +58,7 @@ class Stage {
 
   Optional<Actor> actorAt(Cell c) {
     for (Actor a : actors) {
-      if (a.loc == c) {
+      if (a.location() == c) {
         return Optional.of(a);
       }
     }

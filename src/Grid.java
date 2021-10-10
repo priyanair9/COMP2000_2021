@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-class Grid {
+class Grid implements Iterable<Cell> {
   Cell[][] cells = new Cell[20][20];
   private static Random rand = new Random();
 
@@ -29,7 +29,7 @@ class Grid {
         // -500 <= elevation <= 6000
         // this means that there are 6501 possible
         // values including zero
-        elevation = rand.nextInt(6501) - 500;
+        elevation = rand.nextInt(8001) - 2000;
         // grab a random element from our list
         // use the element's value to determine
         // which cell type to instantiate
@@ -43,7 +43,7 @@ class Grid {
         int y = 10 + 35 * j;
         //  Road: 10% of 400 = 40
         if (current < 40) {
-          cells[i][j] = new Road(c, j, x, y, elevation);
+          cells[i][j] = new Track(c, j, x, y, elevation);
         }
         // Water: 20% of 400 = 80
         if (current >= 40 && current < 120) {
@@ -149,6 +149,9 @@ class Grid {
     }
 
     for (Cell c : inRadius.toArray(new Cell[0])) {
+      if (from instanceof Building) {
+        considerElevation = false;
+      }
       if (considerElevation) {
         if (c instanceof Landscape) {
           Landscape here = (Landscape) from;
@@ -166,6 +169,11 @@ class Grid {
       }
     }
     return new ArrayList<Cell>(inRadius);
+  }
+
+  @Override
+  public CellIterator iterator() {
+    return new CellIterator(cells);
   }
 
   public String toString() {

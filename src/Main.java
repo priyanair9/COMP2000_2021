@@ -19,12 +19,14 @@ class Main extends JFrame {
     public App() {
       setPreferredSize(new Dimension(1024, 720));
       this.addMouseListener(this);
-      stage = StageReader.readStage("data/stage1.rvb");
+      stage = StageReader.readStage(3);
     }
 
     @Override
     public void paint(Graphics g) {
-      stage.paint(g, getMousePosition());
+      if (isVisible()) {
+        stage.paint(g, getMousePosition());
+      }
     }
 
     @Override

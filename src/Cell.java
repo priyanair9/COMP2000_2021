@@ -5,10 +5,10 @@ import java.awt.Rectangle;
 
 class Cell extends Rectangle {
   private static int size = 35;
-  protected String description;
-  protected Color color;
   protected char col;
   protected int row;
+  protected Color color;
+  protected String description;
 
   public Cell(char inCol, int inRow, int inX, int inY) {
     super(inX, inY, size, size);

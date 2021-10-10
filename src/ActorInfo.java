@@ -16,12 +16,12 @@ public class ActorInfo extends InfoPanel {
     for (int i = 0; i < stage.actors.size(); i++) {
       Actor a = stage.actors.get(i);
       yloc = yloc + 2 * blockVtab;
-      g.drawString(a.getClass().toString(), margin, yloc);
+      g.drawString(a.toString(), margin, yloc);
       g.drawString("location:", labelIndent, yloc + vTab);
-      String coordinate = Character.toString(a.loc.col) + Integer.toString(a.loc.row);
+      String coordinate = Character.toString(a.location().col) + Integer.toString(a.location().row);
       g.drawString(coordinate, valueIndent, yloc + vTab);
       g.drawString("redness:", labelIndent, yloc + 2 * vTab);
-      g.drawString(Float.toString(a.redness), valueIndent, yloc + 2 * vTab);
+      g.drawString(String.format("%.1f", a.getRedness()), valueIndent, yloc + 2 * vTab);
     }
   }
 }

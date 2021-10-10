@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class SelectingMenuItem implements GameState {
   @Override
   public void mouseClick(int x, int y, Stage s) {
-    for(MenuItem mi : s.menuOverlay) {
+    for (MenuItem mi : s.menuOverlay) {
       if (mi.contains(x,y)) {
         mi.action.run();
         s.menuOverlay = new ArrayList<MenuItem>();
@@ -15,7 +15,8 @@ public class SelectingMenuItem implements GameState {
   @Override
   public void paint(Graphics g, Stage s) {}
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return getClass().getSimpleName();
   }
 }

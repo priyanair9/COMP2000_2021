@@ -7,19 +7,13 @@ public abstract class InfoPanel {
   final int blockVtab = 35;
   final int margin = 21 * blockVtab;
 
-  public void add(InfoPanel informationPanel) {
-    throw new UnsupportedOperationException();
-  }
+  public void add(InfoPanel panel) {}
 
-  public void remove(InfoPanel informationPanel) {
-    throw new UnsupportedOperationException();
-  }
+  public void remove(InfoPanel panel) {}
 
   public InfoPanel getChild(int i) {
-    throw new UnsupportedOperationException();
+    return null;
   }
-
-  public void paint(Graphics g, int yloc, Point mouseLoc) {
-    throw new UnsupportedOperationException();
-  }
+  
+  public void paint(Graphics g, int yloc, Point mouseLoc) {}
 }

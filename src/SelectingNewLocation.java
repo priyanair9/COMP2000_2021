@@ -13,11 +13,12 @@ public class SelectingNewLocation implements GameState {
     }
     if (clicked.isPresent() && s.actorInAction.isPresent()) {
       s.cellOverlay = new ArrayList<Cell>();
-      s.actorInAction.get().setLocation(clicked.get());
-      s.actorInAction.get().turns--;
+      Actor theActor = s.actorInAction.get();
+      theActor.setLocation(clicked.get());
+      theActor.turnTaken();
       s.menuOverlay.add(new MenuItem("Fire", x, y, () -> {
-        s.cellOverlay = s.grid.getRadius(s.actorInAction.get().loc, s.actorInAction.get().range, false);
-        s.cellOverlay.remove(s.actorInAction.get().loc);
+        s.cellOverlay = s.grid.getRadius(theActor.location(), theActor.getRange(), false);
+        s.cellOverlay.remove(theActor.location());
         s.currentState = new SelectingTarget();
       }));
       s.currentState = new SelectingMenuItem();
@@ -27,7 +28,8 @@ public class SelectingNewLocation implements GameState {
   @Override
   public void paint(Graphics g, Stage s) {}
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return getClass().getSimpleName();
   }
 }

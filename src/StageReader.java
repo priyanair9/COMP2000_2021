@@ -7,7 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class StageReader {
-  public static Stage readStage(String path) {
+  public static Stage readStage(int stageNum) {
+    String path = "data/stage" + String.valueOf(stageNum) + ".rvb";
     Stage stage = new Stage();
     try {
       Properties props = (new Properties());
@@ -50,6 +51,8 @@ class StageReader {
                 elevation = Integer.parseInt(itemMatcher.group(4));
                 if (item.equals("road")) {
                   stage.grid.replaceCell(c, new Road(c.col, c.row, c.x, c.y, elevation));
+                } else if (item.equals("track")) {
+                  stage.grid.replaceCell(c, new Track(c.col, c.row, c.x, c.y, elevation));
                 } else if (item.equals("water")) {
                   stage.grid.replaceCell(c, new Water(c.col, c.row, c.x, c.y, elevation));
                 } else if (item.equals("grass")) {
@@ -75,6 +78,8 @@ class StageReader {
                   stage.actors.add(new Car(c, redness));
                 } else if (item.equals("boat")) {
                   stage.actors.add(new Boat(c, redness));
+                } else if (item.equals("rogue")) {
+                  stage.actors.add(new Rogue(c, redness));
                 } else {
                   System.out.println("error: " + value + ", no such actor  type" + item);
                   break;
