@@ -3,13 +3,21 @@ public class AnimationBeat {
     private long a; // length of phase a
     private long b; // length of phase b
     private long c; // length of phase c
+
     private static AnimationBeat instance;
    
-    private AnimationBeat(){
+    private AnimationBeat() {
         started = System.currentTimeMillis();
         this.a = 5000;
-        this.b = 100;
-        this.c = 300;
+        this.b = 500;
+        this.c = 500;
+    }
+
+    public static AnimationBeat getInstance() {
+        if (instance == null) {
+            instance = new AnimationBeat();
+        }
+        return instance;
     }
 
     // returns which phase the animation is currently in
@@ -30,7 +38,7 @@ public class AnimationBeat {
         long currTime = System.currentTimeMillis();
         long rem = (currTime - started) % (a + b + c);
         if (rem > a + b) {
-            return ((rem -a - b) * 100) / c;
+            return ((rem - a - b) * 100) / c;
         } else if (rem > a) {
             return ((rem - a) * 100) / b;
         } else {
@@ -38,11 +46,4 @@ public class AnimationBeat {
         }
 
     }
-    public static AnimationBeat getInstance() {
-        if(instance == null) {
-              instance = new AnimationBeat();
-         }
-        return instance;
-   }
-
 }

@@ -27,20 +27,15 @@ public class Stage {
         if (currentState == State.CPUMoving) {
             for(Actor a: actors) {
                 if (!a.isTeamRed()) {
-                    if(a.loc.row %2 == 0) {
-                        a.strat = new RandomMove();
-                    }
-                    else {
-                        a.strat = new LeftMostMove();
-                    }
-                    List<Cell> possibleLocs = getClearRadius(a.loc, a.moves);
-                    Cell nextLoc = a.strat.chooseNextLoc(possibleLocs);
+                    // Task 20 - We'll restrict stacked actors to only when created by human players
+                    List<Cell> possibleLocs = getClearRadius(a.location(), a.getMoves());
+                    Cell nextLoc = a.strategy().chooseNextLoc(possibleLocs);
                     a.setLocation(nextLoc);
                 }
             }
             currentState = State.ChoosingActor;
             for(Actor a: actors) {
-                a.turns = 1;
+                a.setTurns(1);
             }
         }
 
@@ -74,24 +69,27 @@ public class Stage {
         final int labelIndent = margin + hTab;
         final int valueIndent = margin + 3*blockVT;
         yLoc = yLoc + 2*blockVT;
+        g.drawString(Character.toString(AnimationBeat.getInstance().inPhase()), labelIndent, yLoc);
+        g.drawString(Long.toString(AnimationBeat.getInstance().phaseCompletion()), valueIndent, yLoc);
         for(int i = 0; i < actors.size(); i++){
             Actor a = actors.get(i);
             yLoc = yLoc + 2*blockVT;
             g.drawString(a.getClass().toString(), margin, yLoc);
             g.drawString("location:", labelIndent, yLoc+vTab);
-            g.drawString(Character.toString(a.loc.col) + Integer.toString(a.loc.row), valueIndent, yLoc+vTab);
+            g.drawString(Character.toString(a.location().col) + Integer.toString(a.location().row), valueIndent, yLoc+vTab);
             g.drawString("redness:", labelIndent, yLoc+2*vTab);
-            g.drawString(Float.toString(a.redness), valueIndent, yLoc+2*vTab);
+            g.drawString(Float.toString(a.getRedness()), valueIndent, yLoc+2*vTab);
         }
         yLoc = yLoc + 3*blockVT;
         Motif torch = new Motif("images/torch.png");
-        torch.draw(g, labelIndent, yLoc, Color.YELLOW);
+        Float phase = AnimationBeat.getInstance().phaseCompletion() / 100.0f;
+        torch.draw(g, labelIndent, yLoc, Color.getHSBColor(phase, 0.5f, 1.0f));
       }
 
     public List<Cell> getClearRadius(Cell from, int size) {
         List<Cell> init = grid.getRadius(from, size);
         for(Actor a: actors) {
-            init.remove(a.loc);
+            init.remove(a.location());
         }
         return init;
     }
@@ -101,8 +99,8 @@ public class Stage {
             case ChoosingActor:
                 actorInAction = Optional.empty();
                 for (Actor a : actors) {
-                    if (a.loc.contains(x, y) && a.isTeamRed() && a.turns > 0) {
-                        cellOverlay = grid.getRadius(a.loc, a.moves);
+                    if (a.location().contains(x, y) && a.isTeamRed() && a.turnsLeft() > 0) {
+                        cellOverlay = grid.getRadius(a.location(), a.getMoves());
                         actorInAction = Optional.of(a);
                         currentState = State.SelectingNewLocation;
                     }
@@ -117,11 +115,22 @@ public class Stage {
                 }
                 cellOverlay = new ArrayList<Cell>();
                 if (clicked.isPresent() && actorInAction.isPresent()) {
+                  List<Actor> mergedActors = new ArrayList<Actor>();
+                  List<Actor> stackedActors = new ArrayList<Actor>();
+                  for (Actor a : actors) {
+                    if (clicked.get().equals(a.location())) {
+                      stackedActors.add(new StackedActors(actorInAction.get(), a));
+                      mergedActors.add(actorInAction.get());
+                      mergedActors.add(a);
+                    }
+                  }
+                  actors.removeAll(mergedActors);
+                  actors.addAll(stackedActors);
                     actorInAction.get().setLocation(clicked.get());
-                    actorInAction.get().turns--;
+                    actorInAction.get().turnTaken();
                     int redsWithMovesLeft = 0;
                     for(Actor a: actors){
-                        if (a.isTeamRed() && a.turns > 0) {
+                        if (a.isTeamRed() && a.turnsLeft() > 0) {
                             redsWithMovesLeft++;
                         }
                     }
@@ -130,12 +139,11 @@ public class Stage {
                     } else {
                         currentState = State.CPUMoving;
                     }
-                } 
+                }
                 break;
             default:
                 System.out.println(currentState);
                 break;
         }
-
     }
 }
