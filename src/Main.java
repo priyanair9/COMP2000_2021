@@ -13,18 +13,19 @@ import javax.swing.JPanel;
 class Main extends JFrame {
     
   class App extends JPanel implements MouseListener {
-    
     Stage stage;
+    boolean stageBuilt = false;
 
     public App() {
       setPreferredSize(new Dimension(1024, 720));
       this.addMouseListener(this);
       stage = StageReader.readStage(3);
+      stageBuilt = true;
     }
 
     @Override
     public void paint(Graphics g) {
-      if (isVisible()) {
+      if (stageBuilt && isVisible()) {
         stage.paint(g, getMousePosition());
       }
     }

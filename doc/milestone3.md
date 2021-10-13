@@ -26,6 +26,8 @@ Of course, nothing really runs in parallel in a computer, you will need to use m
 
 In addition to the above, your starting code includes new actor type Rogue provided in a jar file (hence no source code), there seems to be a randomly occurring bug with this code that causes the whole game to freeze.
 
+Edit: as the new `Rogue` type is provided to you pre-compiled, we have provided an updated version of `Actor.java` (and `rogue.jar`) which breaks out the `Color` selection code as a *Strategy*.  This will allow your colour transitions to work on *all* Actors including `Rogue`.
+
 ## Tasks
 
   * Make a change so that the game no longer randomly freezes whenever a Rogue moves.

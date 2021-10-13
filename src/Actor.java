@@ -5,15 +5,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 abstract class Actor {
-  private Cell loc;
-  private float redness;
-  private int initialTurns;
-  private int turns;
-  private int moves;
-  private int range;
-  private MoveStrategy strat;
+  protected Cell loc;
+  protected float redness;
+  protected int initialTurns;
+  protected int turns;
+  protected int moves;
+  protected int range;
+  protected MoveStrategy strat;
   protected List<Polygon> display;
   protected Predicate<Cell> filter;
+  protected ColorMixer color;
 
   public Actor(Cell inLoc, float inRedness, int inTurns, int inMoves, int inRange) {
     setLocation(inLoc);
@@ -23,11 +24,13 @@ abstract class Actor {
     moves = inMoves;
     range = inRange;
     strat = new RandomMove();
+    color = new ColorMixer();
+    color.setHue((1.0f - redness) * ColorMixer.BLUE);
   }
 
   void paint(Graphics g) {
     for (Polygon p : display) {
-      g.setColor(Color.getHSBColor((redness * 120.0f + 240.0f) / 360.0f, 1.0f, 1.0f));
+      g.setColor(color.mix(redness));
       g.fillPolygon(p);
       g.setColor(Color.GRAY);
       g.drawPolygon(p);
@@ -66,6 +69,10 @@ abstract class Actor {
 
   public int turnsLeft() {
     return turns;
+  }
+
+  public int maxTurns() {
+    return initialTurns;
   }
 
   public void resetTurns() {
